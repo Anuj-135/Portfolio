@@ -46,13 +46,11 @@ export default function Hero({ darkMode }) {
     const [visible, setVisible] = useState(false)
     const [mousePos, setMousePos] = useState({ x: 50, y: 50 })
 
-    // Entrance animation — only after mount
     useEffect(() => {
         const t = setTimeout(() => setVisible(true), 80)
         return () => clearTimeout(t)
     }, [])
 
-    // Typewriter
     useEffect(() => {
         const current = roles[roleIndex]
         let timeout
@@ -69,7 +67,6 @@ export default function Hero({ darkMode }) {
         return () => clearTimeout(timeout)
     }, [displayed, deleting, roleIndex])
 
-    // Mouse parallax — only client side
     useEffect(() => {
         const handler = (e) => setMousePos({
             x: (e.clientX / window.innerWidth) * 100,
@@ -82,96 +79,91 @@ export default function Hero({ darkMode }) {
     const scrollTo = (id) =>
         document.querySelector(id)?.scrollIntoView({ behavior: 'smooth' })
 
-    const reveal = (delay) => `
-    transition-all duration-[900ms] ease-out
-    ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}
-  `
+    const reveal = (delay) => ({
+        transition: `opacity 0.9s ease ${delay}ms, transform 0.9s ease ${delay}ms`,
+        opacity: visible ? 1 : 0,
+        transform: visible ? 'translateY(0)' : 'translateY(28px)',
+    })
+
+    const d = darkMode
 
     return (
         <section
             id="hero"
-            className={`relative min-h-screen flex items-center justify-center overflow-hidden px-6
-        ${darkMode ? 'bg-[#0d0d1a]' : 'bg-[#f0f0f8]'}`}
+            className={`relative min-h-screen flex items-center justify-center overflow-hidden
+        px-4 sm:px-6 lg:px-8
+        ${d ? 'bg-[#0d0d1a]' : 'bg-[#e8e8f0]'}`}
         >
-
-            {/* ── Background ── */}
+            {/* Background */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                {/* Radial base */}
                 <div className={`absolute inset-0 transition-colors duration-500
-          ${darkMode
-                        ? 'bg-[radial-gradient(ellipse_at_top,_#1a1040_0%,_#0d0d1a_60%)]'
-                        : 'bg-[radial-gradient(ellipse_at_top,_#ede9ff_0%,_#f0f0f8_60%)]'
-                    }`}
+          ${d ? 'bg-[radial-gradient(ellipse_at_top,_#1a1040_0%,_#0d0d1a_60%)]'
+                        : 'bg-[radial-gradient(ellipse_at_top,_#ddddf0_0%,_#e8e8f0_60%)]'}`}
                 />
-                {/* Parallax orb 1 */}
                 <div
-                    className={`absolute w-[500px] h-[500px] rounded-full blur-[120px] transition-all duration-[2000ms] ease-out
-            ${darkMode ? 'bg-[#6c63ff]/20' : 'bg-[#6c63ff]/10'}`}
-                    style={{ left: `calc(${mousePos.x}% - 250px)`, top: `calc(${mousePos.y}% - 250px)` }}
+                    className={`absolute w-[300px] sm:w-[500px] h-[300px] sm:h-[500px] rounded-full blur-[100px] sm:blur-[120px] transition-all duration-[2000ms] ease-out
+            ${d ? 'bg-[#6c63ff]/20' : 'bg-[#6c63ff]/10'}`}
+                    style={{ left: `calc(${mousePos.x}% - 150px)`, top: `calc(${mousePos.y}% - 150px)` }}
                 />
-                {/* Parallax orb 2 */}
                 <div
-                    className={`absolute w-[400px] h-[400px] rounded-full blur-[100px] transition-all duration-[3000ms] ease-out
-            ${darkMode ? 'bg-[#a78bfa]/15' : 'bg-[#a78bfa]/10'}`}
-                    style={{ left: `calc(${100 - mousePos.x}% - 200px)`, top: `calc(${100 - mousePos.y}% - 200px)` }}
+                    className={`absolute w-[200px] sm:w-[400px] h-[200px] sm:h-[400px] rounded-full blur-[80px] sm:blur-[100px] transition-all duration-[3000ms] ease-out
+            ${d ? 'bg-[#a78bfa]/15' : 'bg-[#a78bfa]/10'}`}
+                    style={{ left: `calc(${100 - mousePos.x}% - 100px)`, top: `calc(${100 - mousePos.y}% - 100px)` }}
                 />
-                {/* Bottom glow */}
-                <div className={`absolute bottom-0 left-1/2 -translate-x-1/2 w-[700px] h-[250px] rounded-full blur-[90px]
-          ${darkMode ? 'bg-[#312e81]/25' : 'bg-[#c4b5fd]/18'}`}
+                <div className={`absolute bottom-0 left-1/2 -translate-x-1/2 w-full sm:w-[700px] h-[200px] rounded-full blur-[80px]
+          ${d ? 'bg-[#312e81]/25' : 'bg-[#c4b5fd]/18'}`}
                 />
-                {/* Grid */}
                 <div
-                    className={`absolute inset-0 ${darkMode ? 'opacity-[0.025]' : 'opacity-[0.035]'}`}
+                    className={`absolute inset-0 ${d ? 'opacity-[0.025]' : 'opacity-[0.03]'}`}
                     style={{
-                        backgroundImage: `linear-gradient(${darkMode ? '#fff' : '#6c63ff'} 1px, transparent 1px),
-                              linear-gradient(90deg, ${darkMode ? '#fff' : '#6c63ff'} 1px, transparent 1px)`,
-                        backgroundSize: '72px 72px',
+                        backgroundImage: `linear-gradient(${d ? '#fff' : '#6c63ff'} 1px, transparent 1px),
+                              linear-gradient(90deg, ${d ? '#fff' : '#6c63ff'} 1px, transparent 1px)`,
+                        backgroundSize: '60px 60px',
                     }}
                 />
             </div>
 
-            {/* ── Content ── */}
-            <div className="relative z-10 flex flex-col items-center text-center max-w-3xl w-full mx-auto gap-6 pt-20">
+            {/* Content */}
+            <div className="relative z-10 flex flex-col items-center text-center w-full max-w-3xl mx-auto gap-5 pt-20 pb-16">
 
                 {/* Badge */}
-                <div className={`${reveal(0)}`} style={{ transitionDelay: visible ? '0ms' : '0ms' }}>
+                <div style={reveal(0)}>
                     <span className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[11px] font-semibold tracking-widest uppercase
-            ${darkMode
-                            ? 'bg-white/5 border border-white/10 text-white/50'
-                            : 'bg-[#6c63ff]/8 border border-[#6c63ff]/20 text-[#6c63ff]/75'
-                        }`}
+            ${d ? 'bg-white/5 border border-white/10 text-white/50'
+                            : 'bg-[#6c63ff]/8 border border-[#6c63ff]/20 text-[#6c63ff]/75'}`}
                     >
                         <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.9)] animate-pulse" />
                         Open to work
                     </span>
                 </div>
 
-                {/* Heading — reduced size */}
-                <div style={{ transitionDelay: '150ms' }} className={reveal(150)}>
-                    <h1 className={`text-[clamp(2.4rem,5.5vw,4.2rem)] font-black leading-[1.0] tracking-[-0.035em]
-            ${darkMode ? 'text-white' : 'text-[#0d0d1a]'}`}
+                {/* Heading — mobile-first sizing */}
+                <div style={reveal(150)}>
+                    <h1 className={`text-[2.2rem] sm:text-[3rem] md:text-[4rem] font-black leading-[1.0] tracking-[-0.03em]
+            ${d ? 'text-white' : 'text-[#0d0d1a]'}`}
                     >
                         Hi, I'm{' '}
                         <span className="relative inline-block">
                             <span className="bg-gradient-to-r from-[#6c63ff] via-[#a78bfa] to-[#818cf8] bg-clip-text text-transparent">
                                 Anuj
                             </span>
-                            <span className="absolute -bottom-0.5 left-0 right-0 h-[2.5px] rounded-full bg-gradient-to-r from-[#6c63ff] to-[#a78bfa] opacity-50" />
+                            <span className="absolute -bottom-0.5 left-0 right-0 h-[2px] rounded-full bg-gradient-to-r from-[#6c63ff] to-[#a78bfa] opacity-50" />
                         </span>
                         {' '}Chahar
                     </h1>
                 </div>
 
                 {/* Typewriter */}
-                <div style={{ transitionDelay: '300ms' }} className={`${reveal(300)} h-9 flex items-center`}>
-                    <p className={`text-lg sm:text-xl font-medium tracking-tight
-            ${darkMode ? 'text-white/45' : 'text-[#0d0d1a]/40'}`}
+                <div style={reveal(300)} className="h-8 flex items-center">
+                    <p className={`text-base sm:text-xl font-medium tracking-tight
+            ${d ? 'text-white/45' : 'text-[#0d0d1a]/40'}`}
                     >
                         <span className="text-[#6c63ff] font-bold">&lt;</span>
-                        <span className={`mx-2 font-semibold ${darkMode ? 'text-white/65' : 'text-[#0d0d1a]/65'}`}>
+                        <span className={`mx-1.5 font-semibold ${d ? 'text-white/65' : 'text-[#0d0d1a]/65'}`}>
                             {displayed}
                         </span>
-                        <span className="inline-block w-[2px] h-[18px] bg-[#6c63ff] align-middle"
+                        <span
+                            className="inline-block w-[2px] h-[16px] bg-[#6c63ff] align-middle"
                             style={{ animation: 'blink 1s step-end infinite' }}
                         />
                         <span className="text-[#6c63ff] font-bold ml-0.5">/&gt;</span>
@@ -179,31 +171,31 @@ export default function Hero({ darkMode }) {
                 </div>
 
                 {/* Bio */}
-                <div style={{ transitionDelay: '450ms' }} className={reveal(450)}>
-                    <p className={`text-sm sm:text-base leading-relaxed max-w-xl font-light
-            ${darkMode ? 'text-white/40' : 'text-[#0d0d1a]/50'}`}
+                <div style={reveal(420)}>
+                    <p className={`text-sm sm:text-base leading-relaxed max-w-lg mx-auto font-light px-2
+            ${d ? 'text-white/40' : 'text-[#0d0d1a]/50'}`}
                     >
                         I build fast, accessible, and visually refined web experiences.
                         Passionate about turning complex problems into clean, elegant interfaces —
                         currently levelling up from{' '}
-                        <span className={`font-semibold ${darkMode ? 'text-white/65' : 'text-[#0d0d1a]/70'}`}>frontend</span>
+                        <span className={`font-semibold ${d ? 'text-white/65' : 'text-[#0d0d1a]/70'}`}>frontend</span>
                         {' '}to{' '}
                         <span className="font-semibold text-[#6c63ff]">full stack</span>.
                     </p>
                 </div>
 
-                {/* CTA buttons */}
-                <div style={{ transitionDelay: '580ms' }} className={`${reveal(580)} flex flex-wrap items-center justify-center gap-3`}>
+                {/* CTA buttons — stack on mobile */}
+                <div style={reveal(560)} className="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-3 w-full px-4">
                     <button
                         onClick={() => scrollTo('#projects')}
-                        className="group relative px-7 py-3 rounded-full text-sm font-semibold text-white overflow-hidden
+                        className="group relative w-full sm:w-auto px-7 py-3 rounded-full text-sm font-semibold text-white overflow-hidden
               transition-all duration-200 active:scale-95 hover:scale-[1.03]
               bg-gradient-to-r from-[#6c63ff] to-[#818cf8]
               shadow-[0_4px_20px_rgba(108,99,255,0.45)] hover:shadow-[0_6px_28px_rgba(108,99,255,0.65)]"
                     >
                         <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent
               -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
-                        <span className="relative flex items-center gap-2">
+                        <span className="relative flex items-center justify-center gap-2">
                             View My Work
                             <svg width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                                 <path d="M5 12h14M12 5l7 7-7 7" />
@@ -213,11 +205,10 @@ export default function Hero({ darkMode }) {
 
                     <button
                         onClick={() => scrollTo('#contact')}
-                        className={`px-7 py-3 rounded-full text-sm font-semibold transition-all duration-200 active:scale-95 hover:scale-[1.03] border
-              ${darkMode
-                                ? 'border-white/15 text-white/65 hover:text-white hover:border-white/30 hover:bg-white/5'
-                                : 'border-[#6c63ff]/30 text-[#6c63ff]/80 hover:text-[#6c63ff] hover:border-[#6c63ff]/60 hover:bg-[#6c63ff]/5'
-                            }`}
+                        className={`w-full sm:w-auto px-7 py-3 rounded-full text-sm font-semibold
+              transition-all duration-200 active:scale-95 hover:scale-[1.03] border
+              ${d ? 'border-white/15 text-white/65 hover:text-white hover:border-white/30 hover:bg-white/5'
+                                : 'border-[#6c63ff]/30 text-[#6c63ff]/80 hover:text-[#6c63ff] hover:border-[#6c63ff]/60 hover:bg-[#6c63ff]/5'}`}
                     >
                         Get In Touch
                     </button>
@@ -226,12 +217,10 @@ export default function Hero({ darkMode }) {
                         href="/resume.pdf"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className={`px-7 py-3 rounded-full text-sm font-semibold flex items-center gap-2
+                        className={`w-full sm:w-auto px-7 py-3 rounded-full text-sm font-semibold flex items-center justify-center gap-2
               transition-all duration-200 active:scale-95 hover:scale-[1.03]
-              ${darkMode
-                                ? 'bg-white/5 border border-white/10 text-white/55 hover:bg-white/10 hover:text-white'
-                                : 'bg-white border border-black/10 text-[#0d0d1a]/55 hover:bg-white hover:text-[#0d0d1a] shadow-[0_2px_8px_rgba(0,0,0,0.06)]'
-                            }`}
+              ${d ? 'bg-white/5 border border-white/10 text-white/55 hover:bg-white/10 hover:text-white'
+                                : 'bg-white border border-black/10 text-[#0d0d1a]/55 hover:bg-white hover:text-[#0d0d1a] shadow-[0_2px_8px_rgba(0,0,0,0.06)]'}`}
                     >
                         <svg width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                             <path d="M12 15V3m0 12l-4-4m4 4l4-4M2 17l.621 2.485A2 2 0 004.561 21h14.878a2 2 0 001.94-1.515L22 17" />
@@ -240,9 +229,9 @@ export default function Hero({ darkMode }) {
                     </a>
                 </div>
 
-                {/* Divider + socials */}
-                <div style={{ transitionDelay: '720ms' }} className={`${reveal(720)} flex items-center gap-5`}>
-                    <div className={`w-12 h-px ${darkMode ? 'bg-white/10' : 'bg-black/10'}`} />
+                {/* Socials */}
+                <div style={reveal(700)} className="flex items-center gap-4">
+                    <div className={`w-8 sm:w-12 h-px ${d ? 'bg-white/10' : 'bg-black/10'}`} />
                     <div className="flex items-center gap-3">
                         {socials.map(({ label, href, icon }) => (
                             <a
@@ -253,27 +242,23 @@ export default function Hero({ darkMode }) {
                                 aria-label={label}
                                 className={`w-10 h-10 rounded-full flex items-center justify-center
                   transition-all duration-200 active:scale-90 hover:scale-110
-                  ${darkMode
-                                        ? 'bg-white/6 border border-white/10 text-white/40 hover:text-[#6c63ff] hover:border-[#6c63ff]/40 hover:bg-[#6c63ff]/10'
-                                        : 'bg-white border border-black/8 text-[#0d0d1a]/40 hover:text-[#6c63ff] hover:border-[#6c63ff]/30 hover:bg-[#6c63ff]/5 shadow-[2px_2px_8px_rgba(0,0,0,0.06),-1px_-1px_4px_rgba(255,255,255,0.8)]'
-                                    }`}
+                  ${d ? 'bg-white/6 border border-white/10 text-white/40 hover:text-[#6c63ff] hover:border-[#6c63ff]/40 hover:bg-[#6c63ff]/10'
+                                        : 'bg-white border border-black/8 text-[#0d0d1a]/40 hover:text-[#6c63ff] hover:border-[#6c63ff]/30 hover:bg-[#6c63ff]/5 shadow-[2px_2px_8px_rgba(0,0,0,0.06)]'}`}
                             >
                                 {icon}
                             </a>
                         ))}
                     </div>
-                    <div className={`w-12 h-px ${darkMode ? 'bg-white/10' : 'bg-black/10'}`} />
+                    <div className={`w-8 sm:w-12 h-px ${d ? 'bg-white/10' : 'bg-black/10'}`} />
                 </div>
 
-                {/* Tech chips */}
-                <div style={{ transitionDelay: '860ms' }} className={`${reveal(860)} flex flex-wrap justify-center gap-2`}>
+                {/* Tech chips — wrap naturally on mobile */}
+                <div style={reveal(840)} className="flex flex-wrap justify-center gap-2 px-4">
                     {['React', 'Next.js', 'Tailwind CSS', 'JavaScript', 'Node.js'].map((tech) => (
                         <span key={tech}
-                            className={`px-3.5 py-1.5 rounded-full text-[11px] font-semibold tracking-wide transition-colors duration-200 cursor-default
-                ${darkMode
-                                    ? 'bg-white/5 border border-white/8 text-white/38 hover:text-white/65 hover:border-white/18'
-                                    : 'bg-white border border-black/8 text-[#0d0d1a]/40 hover:text-[#6c63ff] hover:border-[#6c63ff]/25 shadow-[1px_1px_4px_rgba(0,0,0,0.04)]'
-                                }`}
+                            className={`px-3 py-1.5 rounded-full text-[11px] font-semibold tracking-wide transition-colors duration-200 cursor-default
+                ${d ? 'bg-white/5 border border-white/8 text-white/38 hover:text-white/65'
+                                    : 'bg-white border border-black/8 text-[#0d0d1a]/40 hover:text-[#6c63ff] shadow-[1px_1px_4px_rgba(0,0,0,0.04)]'}`}
                         >
                             {tech}
                         </span>
@@ -282,16 +267,16 @@ export default function Hero({ darkMode }) {
             </div>
 
             {/* Scroll indicator */}
-            <div className={`absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2
+            <div className={`absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2
         transition-all duration-1000 delay-[1100ms] ${visible ? 'opacity-100' : 'opacity-0'}`}
             >
-                <span className={`text-[9px] uppercase tracking-[0.3em] font-semibold ${darkMode ? 'text-white/25' : 'text-black/22'}`}>
+                <span className={`text-[9px] uppercase tracking-[0.3em] font-semibold ${d ? 'text-white/25' : 'text-black/22'}`}>
                     Scroll
                 </span>
                 <div className={`w-[18px] h-7 rounded-full border flex items-start justify-center pt-1.5
-          ${darkMode ? 'border-white/20' : 'border-black/15'}`}
+          ${d ? 'border-white/20' : 'border-black/15'}`}
                 >
-                    <div className={`w-1 h-1.5 rounded-full animate-bounce ${darkMode ? 'bg-white/40' : 'bg-black/30'}`} />
+                    <div className={`w-1 h-1.5 rounded-full animate-bounce ${d ? 'bg-white/40' : 'bg-black/30'}`} />
                 </div>
             </div>
 

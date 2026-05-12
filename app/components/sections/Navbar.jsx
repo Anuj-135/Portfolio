@@ -47,36 +47,63 @@ export default function Navbar({ darkMode, setDarkMode }) {
         document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' })
     }
 
+    const d = darkMode
+
+    // Neumorphic tokens
+    const pageBg = d ? '#0d0d1a' : '#e8e8f0'
+    const raised = d
+        ? '5px 5px 12px #07071099, -5px -5px 12px #131324'
+        : '5px 5px 12px #c8c8d0, -5px -5px 12px #ffffff'
+    const inset = d
+        ? 'inset 4px 4px 10px #07071099, inset -4px -4px 10px #13132480'
+        : 'inset 4px 4px 10px #c0c0c8, inset -4px -4px 10px #ffffff'
+    const textColor = d ? '#f0ede8' : '#1a1a2e'
+    const mutedColor = d ? 'rgba(240,237,232,0.42)' : 'rgba(26,26,46,0.42)'
+    const accent = '#6c63ff'
+
     return (
         <>
-            {/* ── Header bar ── */}
-            <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500
-        ${darkMode ? 'bg-[#1a1a2e]' : 'bg-[#e8e8f0]'}
-        ${scrolled
-                    ? darkMode
-                        ? 'border-b border-white/5 shadow-[0_4px_24px_rgba(0,0,0,0.4)]'
-                        : 'border-b border-black/5 shadow-[0_4px_24px_rgba(0,0,0,0.07)]'
-                    : 'border-b border-transparent'
-                }`}
-            >
-                <nav className="max-w-6xl mx-auto px-8 h-[68px] flex items-center justify-between">
+            {/* ── Header ── */}
+            <header style={{
+                position: 'fixed', top: 0, left: 0, right: 0, zIndex: 50,
+                background: pageBg,
+                transition: 'all 0.4s ease',
+                boxShadow: scrolled ? (d ? '0 4px 24px rgba(0,0,0,0.4)' : '0 4px 24px rgba(0,0,0,0.07)') : 'none',
+                borderBottom: scrolled ? (d ? '1px solid rgba(255,255,255,0.04)' : '1px solid rgba(0,0,0,0.04)') : '1px solid transparent',
+            }}>
+                <nav style={{
+                    maxWidth: 1152,
+                    margin: '0 auto',
+                    // Responsive padding via inline — px-4 on mobile, px-8 on desktop
+                    padding: '0 16px',
+                    height: 64,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    gap: 8,
+                }}>
 
                     {/* Logo */}
                     <a
                         href="#hero"
                         onClick={(e) => handleNavClick(e, '#hero')}
-                        className={`text-xl font-black tracking-tight select-none
-              ${darkMode ? 'text-white' : 'text-[#1a1a2e]'}`}
+                        style={{
+                            fontSize: 18, fontWeight: 900, letterSpacing: '-0.03em',
+                            color: textColor, textDecoration: 'none',
+                            userSelect: 'none', flexShrink: 0,
+                        }}
                     >
-                        AC<span className="text-[#6c63ff]">.</span>
+                        AC<span style={{ color: accent }}>.</span>
                     </a>
 
-                    {/* ── Desktop pill nav ── */}
-                    <div className={`hidden md:flex items-center gap-2.5 px-3 py-2 rounded-full
-            ${darkMode
-                            ? 'shadow-[inset_4px_4px_10px_#10101f,inset_-4px_-4px_10px_#24243d]'
-                            : 'shadow-[inset_4px_4px_10px_#c8c8d0,inset_-4px_-4px_10px_#ffffff]'
-                        }`}
+                    {/* Desktop pill nav */}
+                    <div
+                        className="hidden md:flex"
+                        style={{
+                            alignItems: 'center', gap: 6,
+                            padding: '6px 10px', borderRadius: 999,
+                            background: pageBg, boxShadow: inset,
+                        }}
                     >
                         {navLinks.map(({ label, href }) => {
                             const isActive = activeSection === href
@@ -85,15 +112,18 @@ export default function Navbar({ darkMode, setDarkMode }) {
                                     key={href}
                                     href={href}
                                     onClick={(e) => handleNavClick(e, href)}
-                                    className={`px-6 py-2 rounded-full text-[13.5px] font-semibold
-                    whitespace-nowrap select-none transition-all duration-200
-                    active:scale-95
-                    ${isActive
-                                            ? 'bg-[#6c63ff] text-white shadow-[0_0_12px_rgba(108,99,255,0.5),inset_2px_2px_4px_rgba(0,0,0,0.2)]'
-                                            : darkMode
-                                                ? 'text-white/45 hover:text-white shadow-[6px_6px_14px_#10101f,-6px_-6px_14px_#24243d] hover:shadow-[3px_3px_8px_#10101f,-3px_-3px_8px_#24243d]'
-                                                : 'text-[#1a1a2e]/45 hover:text-[#1a1a2e] shadow-[6px_6px_14px_#c8c8d0,-6px_-6px_14px_#ffffff] hover:shadow-[3px_3px_8px_#c8c8d0,-3px_-3px_8px_#ffffff]'
-                                        }`}
+                                    style={{
+                                        padding: '7px 20px', borderRadius: 999,
+                                        fontSize: 13, fontWeight: 600,
+                                        textDecoration: 'none', whiteSpace: 'nowrap',
+                                        userSelect: 'none', cursor: 'pointer',
+                                        transition: 'all 0.18s ease',
+                                        color: isActive ? '#fff' : mutedColor,
+                                        backgroundColor: isActive ? accent : 'transparent',
+                                        boxShadow: isActive
+                                            ? `0 0 12px ${accent}80, inset 2px 2px 4px rgba(0,0,0,0.2)`
+                                            : raised,
+                                    }}
                                 >
                                     {label}
                                 </a>
@@ -101,21 +131,28 @@ export default function Navbar({ darkMode, setDarkMode }) {
                         })}
                     </div>
 
-                    {/* ── Right actions ── */}
-                    <div className="flex items-center gap-3">
+                    {/* Right actions */}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
 
                         {/* Theme toggle */}
                         <button
                             onClick={() => setDarkMode(!darkMode)}
                             aria-label="Toggle dark mode"
-                            className={`w-10 h-10 rounded-full flex items-center justify-center
-                border-none cursor-pointer transition-all duration-200 active:scale-95
-                ${darkMode
-                                    ? 'text-yellow-300 shadow-[6px_6px_14px_#10101f,-6px_-6px_14px_#24243d] active:shadow-[inset_4px_4px_10px_#10101f,inset_-4px_-4px_10px_#24243d]'
-                                    : 'text-[#6c63ff] shadow-[6px_6px_14px_#c8c8d0,-6px_-6px_14px_#ffffff] active:shadow-[inset_4px_4px_10px_#c8c8d0,inset_-4px_-4px_10px_#ffffff]'
-                                }`}
+                            style={{
+                                width: 38, height: 38, borderRadius: '50%',
+                                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                border: 'none', cursor: 'pointer',
+                                background: pageBg,
+                                color: d ? '#f6c90e' : accent,
+                                boxShadow: raised,
+                                transition: 'all 0.18s ease',
+                                flexShrink: 0,
+                            }}
+                            onMouseDown={e => e.currentTarget.style.boxShadow = inset}
+                            onMouseUp={e => e.currentTarget.style.boxShadow = raised}
+                            onMouseLeave={e => e.currentTarget.style.boxShadow = raised}
                         >
-                            {darkMode ? <Sun size={15} strokeWidth={2.5} /> : <Moon size={15} strokeWidth={2.5} />}
+                            {d ? <Sun size={14} strokeWidth={2.5} /> : <Moon size={14} strokeWidth={2.5} />}
                         </button>
 
                         {/* Hamburger — mobile only */}
@@ -123,44 +160,71 @@ export default function Navbar({ darkMode, setDarkMode }) {
                             onClick={() => setMenuOpen(!menuOpen)}
                             aria-label={menuOpen ? 'Close menu' : 'Open menu'}
                             aria-expanded={menuOpen}
-                            className={`md:hidden w-10 h-10 rounded-full flex items-center justify-center
-                border-none cursor-pointer transition-all duration-200 active:scale-95
-                ${darkMode
-                                    ? 'text-white shadow-[6px_6px_14px_#10101f,-6px_-6px_14px_#24243d] active:shadow-[inset_4px_4px_10px_#10101f,inset_-4px_-4px_10px_#24243d]'
-                                    : 'text-[#1a1a2e] shadow-[6px_6px_14px_#c8c8d0,-6px_-6px_14px_#ffffff] active:shadow-[inset_4px_4px_10px_#c8c8d0,inset_-4px_-4px_10px_#ffffff]'
-                                }`}
+                            style={{
+                                width: 38, height: 38, borderRadius: '50%',
+                                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                border: 'none', cursor: 'pointer',
+                                background: pageBg,
+                                color: textColor,
+                                boxShadow: raised,
+                                transition: 'all 0.18s ease',
+                                flexShrink: 0,
+                            }}
+                            className="md:hidden"
+                            onMouseDown={e => e.currentTarget.style.boxShadow = inset}
+                            onMouseUp={e => e.currentTarget.style.boxShadow = raised}
+                            onMouseLeave={e => e.currentTarget.style.boxShadow = raised}
                         >
-                            {menuOpen ? <X size={16} strokeWidth={2} /> : <Menu size={16} strokeWidth={2} />}
+                            {menuOpen
+                                ? <X size={15} strokeWidth={2} />
+                                : <Menu size={15} strokeWidth={2} />
+                            }
                         </button>
                     </div>
                 </nav>
             </header>
 
             {/* ── Full-screen mobile overlay ── */}
-            <div className={`md:hidden fixed inset-0 z-40 flex flex-col items-center justify-center
-        transition-all duration-350
-        ${darkMode ? 'bg-[#1a1a2e]' : 'bg-[#e8e8f0]'}
-        ${menuOpen
-                    ? 'opacity-100 translate-y-0 pointer-events-auto'
-                    : 'opacity-0 -translate-y-4 pointer-events-none'
-                }`}
+            <div
+                className="md:hidden"
+                style={{
+                    position: 'fixed', inset: 0, zIndex: 40,
+                    background: pageBg,
+                    display: 'flex', flexDirection: 'column',
+                    alignItems: 'center', justifyContent: 'center',
+                    transition: 'opacity 0.3s ease, transform 0.3s ease',
+                    opacity: menuOpen ? 1 : 0,
+                    transform: menuOpen ? 'translateY(0)' : 'translateY(-12px)',
+                    pointerEvents: menuOpen ? 'all' : 'none',
+                }}
             >
-                <nav className="flex flex-col items-center gap-5 w-full px-10">
-                    {navLinks.map(({ label, href }) => {
+                <nav style={{
+                    display: 'flex', flexDirection: 'column',
+                    alignItems: 'center', gap: 14,
+                    width: '100%', padding: '0 32px',
+                }}>
+                    {navLinks.map(({ label, href }, i) => {
                         const isActive = activeSection === href
                         return (
                             <a
                                 key={href}
                                 href={href}
                                 onClick={(e) => handleNavClick(e, href)}
-                                className={`w-full max-w-xs py-4 rounded-2xl text-lg font-bold
-                  text-center transition-all duration-200 active:scale-95
-                  ${isActive
-                                        ? 'bg-[#6c63ff] text-white shadow-[0_0_16px_rgba(108,99,255,0.45)]'
-                                        : darkMode
-                                            ? 'text-white/50 shadow-[6px_6px_14px_#10101f,-6px_-6px_14px_#24243d] hover:text-white'
-                                            : 'text-[#1a1a2e]/50 shadow-[6px_6px_14px_#c8c8d0,-6px_-6px_14px_#ffffff] hover:text-[#1a1a2e]'
-                                    }`}
+                                style={{
+                                    display: 'block',
+                                    width: '100%', maxWidth: 300,
+                                    padding: '14px 0',
+                                    borderRadius: 16,
+                                    fontSize: 17, fontWeight: 700,
+                                    textAlign: 'center', textDecoration: 'none',
+                                    transition: 'all 0.2s ease',
+                                    transitionDelay: menuOpen ? `${i * 50}ms` : '0ms',
+                                    color: isActive ? '#fff' : mutedColor,
+                                    backgroundColor: isActive ? accent : 'transparent',
+                                    boxShadow: isActive
+                                        ? `0 0 16px ${accent}50`
+                                        : raised,
+                                }}
                             >
                                 {label}
                             </a>
@@ -168,6 +232,15 @@ export default function Navbar({ darkMode, setDarkMode }) {
                     })}
                 </nav>
             </div>
+
+            {/* Padding pushed content below fixed nav */}
+            <style>{`
+        @media (max-width: 767px) {
+          nav .md\\:hidden { display: flex !important; }
+        }
+        /* Prevent content from hiding under navbar */
+        #hero { padding-top: 64px; }
+      `}</style>
         </>
     )
 }
