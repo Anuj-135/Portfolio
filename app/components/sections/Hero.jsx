@@ -1,12 +1,14 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 
 const roles = [
-    'Frontend Developer',
-    'React Enthusiast',
-    'Full Stack Learner',
+    'Frontend Engineer',
+    'Full Stack Developer',
     'UI Craftsman',
+    'React & Next.js Dev',
+    'Web Experience Builder',
 ]
 
 const socials = [
@@ -39,248 +41,432 @@ const socials = [
     },
 ]
 
+const workingOn = [
+    { icon: '⚡', text: 'Full Stack Dev' },
+    { icon: '🤖', text: 'AI Projects' },
+    { icon: '🎯', text: 'Open to Internship' },
+]
+
+const codeLines = [
+    { indent: 0, tokens: [{ t: 'const ', c: '#a78bfa' }, { t: 'Anuj', c: null }, { t: ' = () => ({', c: null }] },
+    { indent: 1, tokens: [{ t: 'role:', c: '#6c63ff' }, { t: ' "Frontend Dev"', c: '#10b981' }] },
+    { indent: 1, tokens: [{ t: 'stack:', c: '#6c63ff' }, { t: ' ["React", "Next"]', c: '#f59e0b' }] },
+    { indent: 1, tokens: [{ t: 'status:', c: '#6c63ff' }, { t: ' "open_to_work"', c: '#10b981' }] },
+    { indent: 1, tokens: [{ t: 'passion:', c: '#6c63ff' }, { t: ' 100 + "%"', c: '#f59e0b' }] },
+    { indent: 0, tokens: [{ t: '})', c: null }] },
+]
+
+const container = {
+    hidden: {},
+    show: { transition: { staggerChildren: 0.11, delayChildren: 0.15 } },
+}
+const fadeUp = {
+    hidden: { opacity: 0, y: 24 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.65, ease: [0.22, 1, 0.36, 1] } },
+}
+
 export default function Hero({ darkMode }) {
     const [roleIndex, setRoleIndex] = useState(0)
-    const [displayed, setDisplayed] = useState('')
-    const [deleting, setDeleting] = useState(false)
-    const [visible, setVisible] = useState(false)
-    const [mousePos, setMousePos] = useState({ x: 50, y: 50 })
-
-    useEffect(() => {
-        const t = setTimeout(() => setVisible(true), 80)
-        return () => clearTimeout(t)
-    }, [])
-
-    useEffect(() => {
-        const current = roles[roleIndex]
-        let timeout
-        if (!deleting && displayed.length < current.length) {
-            timeout = setTimeout(() => setDisplayed(current.slice(0, displayed.length + 1)), 75)
-        } else if (!deleting && displayed.length === current.length) {
-            timeout = setTimeout(() => setDeleting(true), 2000)
-        } else if (deleting && displayed.length > 0) {
-            timeout = setTimeout(() => setDisplayed(current.slice(0, displayed.length - 1)), 40)
-        } else {
-            setDeleting(false)
-            setRoleIndex((i) => (i + 1) % roles.length)
-        }
-        return () => clearTimeout(timeout)
-    }, [displayed, deleting, roleIndex])
-
-    useEffect(() => {
-        const handler = (e) => setMousePos({
-            x: (e.clientX / window.innerWidth) * 100,
-            y: (e.clientY / window.innerHeight) * 100,
-        })
-        window.addEventListener('mousemove', handler, { passive: true })
-        return () => window.removeEventListener('mousemove', handler)
-    }, [])
-
-    const scrollTo = (id) =>
-        document.querySelector(id)?.scrollIntoView({ behavior: 'smooth' })
-
-    const reveal = (delay) => ({
-        transition: `opacity 0.9s ease ${delay}ms, transform 0.9s ease ${delay}ms`,
-        opacity: visible ? 1 : 0,
-        transform: visible ? 'translateY(0)' : 'translateY(28px)',
-    })
-
     const d = darkMode
+
+    useEffect(() => {
+        const t = setInterval(() => setRoleIndex(i => (i + 1) % roles.length), 2800)
+        return () => clearInterval(t)
+    }, [])
+
+    const scrollTo = id => document.querySelector(id)?.scrollIntoView({ behavior: 'smooth' })
+
+    const pageBg = d ? '#0d0d1a' : '#e8e8f0'
+    const raised = d
+        ? '6px 6px 16px #07071099, -6px -6px 16px #131324'
+        : '6px 6px 16px #c8c8d0, -6px -6px 16px #ffffff'
+    const raisedSm = d
+        ? '4px 4px 10px #07071099, -4px -4px 10px #131324'
+        : '4px 4px 10px #c8c8d0, -4px -4px 10px #ffffff'
+    const inset = d
+        ? 'inset 4px 4px 10px #07071099, inset -4px -4px 10px #13132480'
+        : 'inset 4px 4px 10px #c0c0c8, inset -4px -4px 10px #ffffff'
+
+    const text = d ? '#f0ede8' : '#1a1a2e'
+    const muted = d ? 'rgba(240,237,232,0.45)' : 'rgba(26,26,46,0.48)'
+    const accent = '#6c63ff'
+    const divClr = d ? 'rgba(255,255,255,0.06)' : 'rgba(26,26,46,0.08)'
 
     return (
         <section
             id="hero"
-            className={`relative min-h-screen flex items-center justify-center overflow-hidden
-        px-4 sm:px-6 lg:px-8
-        ${d ? 'bg-[#0d0d1a]' : 'bg-[#e8e8f0]'}`}
+            style={{ background: pageBg, transition: 'background 0.4s ease' }}
+            className="relative min-h-screen flex items-center px-4 sm:px-6 lg:px-8 pt-28 sm:pt-32 lg:pt-24 pb-16 overflow-hidden mt-5"
         >
             {/* Background */}
-            <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                <div className={`absolute inset-0 transition-colors duration-500
-          ${d ? 'bg-[radial-gradient(ellipse_at_top,_#1a1040_0%,_#0d0d1a_60%)]'
-                        : 'bg-[radial-gradient(ellipse_at_top,_#ddddf0_0%,_#e8e8f0_60%)]'}`}
-                />
-                <div
-                    className={`absolute w-[300px] sm:w-[500px] h-[300px] sm:h-[500px] rounded-full blur-[100px] sm:blur-[120px] transition-all duration-[2000ms] ease-out
-            ${d ? 'bg-[#6c63ff]/20' : 'bg-[#6c63ff]/10'}`}
-                    style={{ left: `calc(${mousePos.x}% - 150px)`, top: `calc(${mousePos.y}% - 150px)` }}
-                />
-                <div
-                    className={`absolute w-[200px] sm:w-[400px] h-[200px] sm:h-[400px] rounded-full blur-[80px] sm:blur-[100px] transition-all duration-[3000ms] ease-out
-            ${d ? 'bg-[#a78bfa]/15' : 'bg-[#a78bfa]/10'}`}
-                    style={{ left: `calc(${100 - mousePos.x}% - 100px)`, top: `calc(${100 - mousePos.y}% - 100px)` }}
-                />
-                <div className={`absolute bottom-0 left-1/2 -translate-x-1/2 w-full sm:w-[700px] h-[200px] rounded-full blur-[80px]
-          ${d ? 'bg-[#312e81]/25' : 'bg-[#c4b5fd]/18'}`}
-                />
-                <div
-                    className={`absolute inset-0 ${d ? 'opacity-[0.025]' : 'opacity-[0.03]'}`}
-                    style={{
-                        backgroundImage: `linear-gradient(${d ? '#fff' : '#6c63ff'} 1px, transparent 1px),
-                              linear-gradient(90deg, ${d ? '#fff' : '#6c63ff'} 1px, transparent 1px)`,
-                        backgroundSize: '60px 60px',
-                    }}
-                />
+            <div className="absolute inset-0 pointer-events-none">
+                <div style={{
+                    position: 'absolute', top: '-10%', left: '-5%',
+                    width: 500, height: 500, borderRadius: '50%',
+                    background: `radial-gradient(circle, ${d ? 'rgba(108,99,255,0.12)' : 'rgba(108,99,255,0.08)'} 0%, transparent 70%)`,
+                }} />
+                <div style={{
+                    position: 'absolute', bottom: '-10%', right: '-5%',
+                    width: 400, height: 400, borderRadius: '50%',
+                    background: `radial-gradient(circle, ${d ? 'rgba(167,139,250,0.10)' : 'rgba(167,139,250,0.07)'} 0%, transparent 70%)`,
+                }} />
+                <div style={{
+                    position: 'absolute', inset: 0,
+                    backgroundImage: `linear-gradient(${d ? 'rgba(108,99,255,0.03)' : 'rgba(108,99,255,0.03)'} 1px, transparent 1px),
+                            linear-gradient(90deg, ${d ? 'rgba(108,99,255,0.03)' : 'rgba(108,99,255,0.03)'} 1px, transparent 1px)`,
+                    backgroundSize: '72px 72px',
+                }} />
             </div>
 
-            {/* Content */}
-            <div className="relative z-10 flex flex-col items-center text-center w-full max-w-3xl mx-auto gap-5 pt-20 pb-16">
+            <div className="relative z-10 max-w-6xl w-full mx-auto">
 
-                {/* Badge */}
-                <div style={reveal(0)}>
-                    <span className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[11px] font-semibold tracking-widest uppercase
-            ${d ? 'bg-white/5 border border-white/10 text-white/50'
-                            : 'bg-[#6c63ff]/8 border border-[#6c63ff]/20 text-[#6c63ff]/75'}`}
+                {/* ── Single col (mobile/tablet) → Two col (desktop) ── */}
+                <div className="flex flex-col lg:grid lg:grid-cols-2 lg:gap-20 xl:gap-28 items-center gap-14">
+
+                    {/* ════ LEFT — Text content ════ */}
+                    <motion.div
+                        variants={container}
+                        initial="hidden"
+                        animate="show"
+                        className="flex flex-col gap-5 w-full lg:order-1 order-1 items-center text-center lg:items-start lg:text-left"
                     >
-                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.9)] animate-pulse" />
-                        Open to work
-                    </span>
-                </div>
-
-                {/* Heading — mobile-first sizing */}
-                <div style={reveal(150)}>
-                    <h1 className={`text-[2.2rem] sm:text-[3rem] md:text-[4rem] font-black leading-[1.0] tracking-[-0.03em]
-            ${d ? 'text-white' : 'text-[#0d0d1a]'}`}
-                    >
-                        Hi, I'm{' '}
-                        <span className="relative inline-block">
-                            <span className="bg-gradient-to-r from-[#6c63ff] via-[#a78bfa] to-[#818cf8] bg-clip-text text-transparent">
-                                Anuj
-                            </span>
-                            <span className="absolute -bottom-0.5 left-0 right-0 h-[2px] rounded-full bg-gradient-to-r from-[#6c63ff] to-[#a78bfa] opacity-50" />
-                        </span>
-                        {' '}Chahar
-                    </h1>
-                </div>
-
-                {/* Typewriter */}
-                <div style={reveal(300)} className="h-8 flex items-center">
-                    <p className={`text-base sm:text-xl font-medium tracking-tight
-            ${d ? 'text-white/45' : 'text-[#0d0d1a]/40'}`}
-                    >
-                        <span className="text-[#6c63ff] font-bold">&lt;</span>
-                        <span className={`mx-1.5 font-semibold ${d ? 'text-white/65' : 'text-[#0d0d1a]/65'}`}>
-                            {displayed}
-                        </span>
-                        <span
-                            className="inline-block w-[2px] h-[16px] bg-[#6c63ff] align-middle"
-                            style={{ animation: 'blink 1s step-end infinite' }}
-                        />
-                        <span className="text-[#6c63ff] font-bold ml-0.5">/&gt;</span>
-                    </p>
-                </div>
-
-                {/* Bio */}
-                <div style={reveal(420)}>
-                    <p className={`text-sm sm:text-base leading-relaxed max-w-lg mx-auto font-light px-2
-            ${d ? 'text-white/40' : 'text-[#0d0d1a]/50'}`}
-                    >
-                        I build fast, accessible, and visually refined web experiences.
-                        Passionate about turning complex problems into clean, elegant interfaces —
-                        currently levelling up from{' '}
-                        <span className={`font-semibold ${d ? 'text-white/65' : 'text-[#0d0d1a]/70'}`}>frontend</span>
-                        {' '}to{' '}
-                        <span className="font-semibold text-[#6c63ff]">full stack</span>.
-                    </p>
-                </div>
-
-                {/* CTA buttons — stack on mobile */}
-                <div style={reveal(560)} className="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-3 w-full px-4">
-                    <button
-                        onClick={() => scrollTo('#projects')}
-                        className="group relative w-full sm:w-auto px-7 py-3 rounded-full text-sm font-semibold text-white overflow-hidden
-              transition-all duration-200 active:scale-95 hover:scale-[1.03]
-              bg-gradient-to-r from-[#6c63ff] to-[#818cf8]
-              shadow-[0_4px_20px_rgba(108,99,255,0.45)] hover:shadow-[0_6px_28px_rgba(108,99,255,0.65)]"
-                    >
-                        <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent
-              -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
-                        <span className="relative flex items-center justify-center gap-2">
-                            View My Work
-                            <svg width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                                <path d="M5 12h14M12 5l7 7-7 7" />
-                            </svg>
-                        </span>
-                    </button>
-
-                    <button
-                        onClick={() => scrollTo('#contact')}
-                        className={`w-full sm:w-auto px-7 py-3 rounded-full text-sm font-semibold
-              transition-all duration-200 active:scale-95 hover:scale-[1.03] border
-              ${d ? 'border-white/15 text-white/65 hover:text-white hover:border-white/30 hover:bg-white/5'
-                                : 'border-[#6c63ff]/30 text-[#6c63ff]/80 hover:text-[#6c63ff] hover:border-[#6c63ff]/60 hover:bg-[#6c63ff]/5'}`}
-                    >
-                        Get In Touch
-                    </button>
-
-                    <a
-                        href="/resume.pdf"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className={`w-full sm:w-auto px-7 py-3 rounded-full text-sm font-semibold flex items-center justify-center gap-2
-              transition-all duration-200 active:scale-95 hover:scale-[1.03]
-              ${d ? 'bg-white/5 border border-white/10 text-white/55 hover:bg-white/10 hover:text-white'
-                                : 'bg-white border border-black/10 text-[#0d0d1a]/55 hover:bg-white hover:text-[#0d0d1a] shadow-[0_2px_8px_rgba(0,0,0,0.06)]'}`}
-                    >
-                        <svg width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                            <path d="M12 15V3m0 12l-4-4m4 4l4-4M2 17l.621 2.485A2 2 0 004.561 21h14.878a2 2 0 001.94-1.515L22 17" />
-                        </svg>
-                        Resume
-                    </a>
-                </div>
-
-                {/* Socials */}
-                <div style={reveal(700)} className="flex items-center gap-4">
-                    <div className={`w-8 sm:w-12 h-px ${d ? 'bg-white/10' : 'bg-black/10'}`} />
-                    <div className="flex items-center gap-3">
-                        {socials.map(({ label, href, icon }) => (
-                            <a
-                                key={label}
-                                href={href}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                aria-label={label}
-                                className={`w-10 h-10 rounded-full flex items-center justify-center
-                  transition-all duration-200 active:scale-90 hover:scale-110
-                  ${d ? 'bg-white/6 border border-white/10 text-white/40 hover:text-[#6c63ff] hover:border-[#6c63ff]/40 hover:bg-[#6c63ff]/10'
-                                        : 'bg-white border border-black/8 text-[#0d0d1a]/40 hover:text-[#6c63ff] hover:border-[#6c63ff]/30 hover:bg-[#6c63ff]/5 shadow-[2px_2px_8px_rgba(0,0,0,0.06)]'}`}
+                        {/* Badge */}
+                        <motion.div variants={fadeUp}>
+                            <span
+                                className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[11px] font-bold tracking-widest uppercase"
+                                style={{ background: pageBg, boxShadow: raised, color: accent }}
                             >
-                                {icon}
-                            </a>
-                        ))}
-                    </div>
-                    <div className={`w-8 sm:w-12 h-px ${d ? 'bg-white/10' : 'bg-black/10'}`} />
-                </div>
+                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"
+                                    style={{ boxShadow: '0 0 6px rgba(52,211,153,0.9)' }} />
+                                Open to work
+                            </span>
+                        </motion.div>
 
-                {/* Tech chips — wrap naturally on mobile */}
-                <div style={reveal(840)} className="flex flex-wrap justify-center gap-2 px-4">
-                    {['React', 'Next.js', 'Tailwind CSS', 'JavaScript', 'Node.js'].map((tech) => (
-                        <span key={tech}
-                            className={`px-3 py-1.5 rounded-full text-[11px] font-semibold tracking-wide transition-colors duration-200 cursor-default
-                ${d ? 'bg-white/5 border border-white/8 text-white/38 hover:text-white/65'
-                                    : 'bg-white border border-black/8 text-[#0d0d1a]/40 hover:text-[#6c63ff] shadow-[1px_1px_4px_rgba(0,0,0,0.04)]'}`}
+                        {/* Heading */}
+                        <motion.div variants={fadeUp}>
+                            <h1
+                                className="font-black leading-[1.05] tracking-tight"
+                                style={{
+                                    fontSize: 'clamp(2rem, 5.5vw, 4rem)',
+                                    letterSpacing: '-0.035em',
+                                    color: text,
+                                }}
+                            >
+                                Hi, I'm{' '}
+                                <span style={{
+                                    background: `linear-gradient(135deg, ${accent}, #a78bfa)`,
+                                    WebkitBackgroundClip: 'text',
+                                    WebkitTextFillColor: 'transparent',
+                                    backgroundClip: 'text',
+                                }}>
+                                    Anuj Chahar
+                                </span>
+                            </h1>
+                        </motion.div>
+
+                        {/* Rotating role */}
+                        <motion.div variants={fadeUp}
+                            className="flex items-center gap-2.5 flex-wrap justify-center lg:justify-start"
+                            style={{ minHeight: 36 }}
                         >
-                            {tech}
-                        </span>
-                    ))}
-                </div>
-            </div>
+                            <span style={{ fontSize: 15, fontWeight: 500, color: muted, flexShrink: 0 }}>I'm a</span>
+                            <div style={{ position: 'relative', height: 34, minWidth: 200, maxWidth: '100%', overflow: 'hidden' }}>
+                                <AnimatePresence mode="wait">
+                                    <motion.span
+                                        key={roleIndex}
+                                        initial={{ opacity: 0, y: 14 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        exit={{ opacity: 0, y: -14 }}
+                                        transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
+                                        style={{
+                                            position: 'absolute', left: 0, top: 0,
+                                            fontSize: 15, fontWeight: 800,
+                                            color: accent,
+                                            background: pageBg, boxShadow: raised,
+                                            padding: '4px 14px', borderRadius: 100,
+                                            whiteSpace: 'nowrap',
+                                        }}
+                                    >
+                                        {roles[roleIndex]}
+                                    </motion.span>
+                                </AnimatePresence>
+                            </div>
+                        </motion.div>
 
-            {/* Scroll indicator */}
-            <div className={`absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2
-        transition-all duration-1000 delay-[1100ms] ${visible ? 'opacity-100' : 'opacity-0'}`}
-            >
-                <span className={`text-[9px] uppercase tracking-[0.3em] font-semibold ${d ? 'text-white/25' : 'text-black/22'}`}>
-                    Scroll
-                </span>
-                <div className={`w-[18px] h-7 rounded-full border flex items-start justify-center pt-1.5
-          ${d ? 'border-white/20' : 'border-black/15'}`}
+                        {/* Description */}
+                        <motion.p variants={fadeUp}
+                            className="leading-relaxed mx-auto lg:mx-0"
+                            style={{ fontSize: 14, color: muted, maxWidth: 480 }}
+                        >
+                            I build modern, scalable, and interactive web experiences
+                            using{' '}
+                            <span style={{ color: accent, fontWeight: 600 }}>React</span>,{' '}
+                            <span style={{ color: accent, fontWeight: 600 }}>Next.js</span>,
+                            and cutting-edge frontend technologies.
+                        </motion.p>
+
+                        {/* CTA buttons */}
+                        <motion.div variants={fadeUp} className="flex flex-wrap gap-3 justify-center lg:justify-start">
+                            <motion.button
+                                onClick={() => scrollTo('#projects')}
+                                whileHover={{ y: -2, boxShadow: `8px 8px 20px ${d ? '#07071099' : '#c8c8d0'}, -8px -8px 20px ${d ? '#131324' : '#ffffff'}, 0 0 20px ${accent}40` }}
+                                whileTap={{ scale: 0.97 }}
+                                style={{
+                                    padding: '10px 26px', borderRadius: 100,
+                                    border: 'none', cursor: 'pointer',
+                                    background: `linear-gradient(135deg, ${accent}, #a78bfa)`,
+                                    boxShadow: `0 4px 20px ${accent}50`,
+                                    color: '#fff', fontSize: 14, fontWeight: 700,
+                                }}
+                            >
+                                View Projects →
+                            </motion.button>
+
+                            <motion.button
+                                onClick={() => scrollTo('#contact')}
+                                whileHover={{ y: -2 }}
+                                whileTap={{ scale: 0.97 }}
+                                style={{
+                                    padding: '10px 26px', borderRadius: 100,
+                                    border: 'none', cursor: 'pointer',
+                                    background: pageBg, boxShadow: raised,
+                                    color: muted, fontSize: 14, fontWeight: 600,
+                                }}
+                            >
+                                Contact Me
+                            </motion.button>
+
+                            <motion.a
+                                href="/resume.pdf" target="_blank" rel="noopener noreferrer"
+                                whileHover={{ y: -2 }}
+                                whileTap={{ scale: 0.97 }}
+                                style={{
+                                    padding: '10px 20px', borderRadius: 100,
+                                    background: pageBg, boxShadow: inset,
+                                    color: muted, fontSize: 13, fontWeight: 600,
+                                    textDecoration: 'none',
+                                    display: 'inline-flex', alignItems: 'center', gap: 6,
+                                }}
+                            >
+                                <svg width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                                    <path d="M12 15V3m0 12l-4-4m4 4l4-4M2 17l.621 2.485A2 2 0 004.561 21h14.878a2 2 0 001.94-1.515L22 17" />
+                                </svg>
+                                Resume
+                            </motion.a>
+                        </motion.div>
+
+                        {/* Socials */}
+                        <motion.div variants={fadeUp} className="flex items-center gap-3 flex-wrap justify-center lg:justify-start">
+                            <span style={{ fontSize: 11, color: muted, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+                                Find me
+                            </span>
+                            <div style={{ width: 20, height: 1, background: divClr }} />
+                            {socials.map(({ label, href, icon }) => (
+                                <motion.a
+                                    key={label}
+                                    href={href} target="_blank" rel="noopener noreferrer"
+                                    aria-label={label}
+                                    whileHover={{ y: -3, color: accent }}
+                                    whileTap={{ scale: 0.9 }}
+                                    style={{
+                                        width: 38, height: 38, borderRadius: '50%',
+                                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                        background: pageBg, boxShadow: raised,
+                                        color: muted, textDecoration: 'none',
+                                        transition: 'color 0.2s',
+                                    }}
+                                >
+                                    {icon}
+                                </motion.a>
+                            ))}
+                        </motion.div>
+                    </motion.div>
+
+                    {/* ════ RIGHT — Floating visuals ════ */}
+                    <motion.div
+                        className="w-full lg:order-2 order-2 flex items-center justify-center px-4 sm:px-8 lg:px-0"
+                        initial={{ opacity: 0, y: 24 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                    >
+                        <div className="relative w-full max-w-[340px] sm:max-w-[400px] lg:max-w-none mx-auto">
+
+                            {/* Glow orb */}
+                            <motion.div
+                                animate={{ scale: [1, 1.08, 1], opacity: [0.4, 0.7, 0.4] }}
+                                transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
+                                style={{
+                                    position: 'absolute', top: '15%', left: '5%',
+                                    width: 260, height: 260, borderRadius: '50%',
+                                    background: `radial-gradient(circle, ${accent}22 0%, transparent 70%)`,
+                                    filter: 'blur(28px)', pointerEvents: 'none', zIndex: 0,
+                                }}
+                            />
+
+                            {/* Code editor card */}
+                            <div style={{
+                                background: pageBg,
+                                boxShadow: raised,
+                                borderRadius: 20,
+                                overflow: 'hidden',
+                                position: 'relative', zIndex: 2,
+                            }}>
+                                {/* Title bar */}
+                                <div style={{
+                                    padding: '10px 14px',
+                                    background: d ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.03)',
+                                    borderBottom: `1px solid ${divClr}`,
+                                    display: 'flex', alignItems: 'center', gap: 8,
+                                }}>
+                                    <div className="flex gap-1.5">
+                                        {['#ff5f57', '#ffbd2e', '#28c840'].map(c => (
+                                            <span key={c} style={{ width: 9, height: 9, borderRadius: '50%', background: c, display: 'block' }} />
+                                        ))}
+                                    </div>
+                                    <span style={{ fontSize: 10, color: muted, marginLeft: 6, fontFamily: 'monospace' }}>anuj.js</span>
+                                    <span style={{
+                                        marginLeft: 'auto', fontSize: 9, fontWeight: 600,
+                                        padding: '1px 7px', borderRadius: 4,
+                                        background: `${accent}20`, color: accent,
+                                    }}>JS</span>
+                                </div>
+
+                                {/* Code body */}
+                                <div style={{ padding: '16px 18px', fontFamily: 'monospace', fontSize: 12, lineHeight: 2 }}>
+                                    {codeLines.map((line, li) => (
+                                        <motion.div
+                                            key={li}
+                                            initial={{ opacity: 0, x: -8 }}
+                                            animate={{ opacity: 1, x: 0 }}
+                                            transition={{ delay: 0.7 + li * 0.09, duration: 0.35 }}
+                                            style={{ display: 'flex', paddingLeft: line.indent * 16 }}
+                                        >
+                                            <span style={{ color: d ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.13)', marginRight: 14, userSelect: 'none', fontSize: 10 }}>
+                                                {String(li + 1).padStart(2, '0')}
+                                            </span>
+                                            {line.tokens.map((tok, ti) => (
+                                                <span key={ti} style={{ color: tok.c || muted }}>{tok.t}</span>
+                                            ))}
+                                        </motion.div>
+                                    ))}
+                                    <motion.div
+                                        animate={{ opacity: [1, 0, 1] }}
+                                        transition={{ duration: 1, repeat: Infinity }}
+                                        style={{
+                                            display: 'inline-block', width: 7, height: 14,
+                                            background: accent, borderRadius: 2,
+                                            verticalAlign: 'middle', marginLeft: 2,
+                                        }}
+                                    />
+                                </div>
+
+                                {/* Status bar */}
+                                <div style={{
+                                    padding: '7px 14px',
+                                    background: `${accent}10`,
+                                    borderTop: `1px solid ${divClr}`,
+                                    display: 'flex', alignItems: 'center', gap: 7,
+                                }}>
+                                    <span style={{
+                                        width: 6, height: 6, borderRadius: '50%', background: '#10b981',
+                                        boxShadow: '0 0 5px rgba(16,185,129,0.8)', display: 'block'
+                                    }}
+                                        className="animate-pulse"
+                                    />
+                                    <span style={{ fontSize: 9, color: muted, fontFamily: 'monospace' }}>
+                                        ready to build something great
+                                    </span>
+                                </div>
+                            </div>
+
+                            {/* Experience badge — top left */}
+                            <motion.div
+                                initial={{ opacity: 0, x: -16, y: -16 }}
+                                animate={{ opacity: 1, x: 0, y: 0 }}
+                                transition={{ duration: 0.7, delay: 1.1 }}
+                                style={{
+                                    position: 'absolute', top: -40, left: -40,
+                                    background: pageBg, boxShadow: raisedSm,
+                                    borderRadius: 14, padding: '8px 14px',
+                                    display: 'flex', alignItems: 'center', gap: 8, zIndex: 4,
+                                }}
+                            >
+                                <div style={{
+                                    width: 32, height: 32, borderRadius: 9,
+                                    background: `linear-gradient(135deg, ${accent}35, #a78bfa25)`,
+                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                    fontSize: 16, boxShadow: inset,
+                                }}>🚀</div>
+                                <div>
+                                    <p style={{ fontSize: 15, fontWeight: 900, color: accent, lineHeight: 1 }}>1+</p>
+                                    <p style={{ fontSize: 9, color: muted, fontWeight: 500, marginTop: 1 }}>Yrs Exp</p>
+                                </div>
+                            </motion.div>
+
+                            {/* Currently on card — bottom right */}
+                            <motion.div
+                                initial={{ opacity: 0, x: 16, y: 16 }}
+                                animate={{ opacity: 1, x: 0, y: 0 }}
+                                transition={{ duration: 0.7, delay: 1.25 }}
+                                style={{
+                                    position: 'absolute', bottom: -40, right: -40,
+                                    background: pageBg, boxShadow: raisedSm,
+                                    borderRadius: 16, padding: '12px 14px',
+                                    minWidth: 170, zIndex: 4,
+                                }}
+                            >
+                                <p style={{ fontSize: 9, fontWeight: 800, letterSpacing: '0.14em', textTransform: 'uppercase', color: muted, marginBottom: 9 }}>
+                                    Currently on
+                                </p>
+                                {workingOn.map(({ icon, text: t }, i) => (
+                                    <motion.div
+                                        key={t}
+                                        initial={{ opacity: 0, x: 8 }}
+                                        animate={{ opacity: 1, x: 0 }}
+                                        transition={{ delay: 1.4 + i * 0.09 }}
+                                        style={{
+                                            display: 'flex', alignItems: 'center', gap: 7,
+                                            marginBottom: i < workingOn.length - 1 ? 7 : 0,
+                                        }}
+                                    >
+                                        <span style={{
+                                            width: 24, height: 24, borderRadius: 7, flexShrink: 0,
+                                            background: pageBg, boxShadow: inset,
+                                            display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11,
+                                        }}>{icon}</span>
+                                        <span style={{ fontSize: 10, fontWeight: 600, color: muted, lineHeight: 1.3 }}>{t}</span>
+                                    </motion.div>
+                                ))}
+                            </motion.div>
+
+                        </div>
+                    </motion.div>
+                </div>
+
+                {/* Scroll indicator */}
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 2.2, duration: 0.8 }}
+                    className="flex flex-col items-center gap-2 mt-14"
                 >
-                    <div className={`w-1 h-1.5 rounded-full animate-bounce ${d ? 'bg-white/40' : 'bg-black/30'}`} />
-                </div>
-            </div>
+                    <span style={{ fontSize: 9, color: muted, letterSpacing: '0.3em', textTransform: 'uppercase', fontWeight: 600 }}>
+                        Scroll
+                    </span>
+                    <motion.div
+                        animate={{ y: [0, 5, 0] }}
+                        transition={{ duration: 1.4, repeat: Infinity, ease: 'easeInOut' }}
+                        style={{
+                            width: 18, height: 28, borderRadius: 100,
+                            border: `1.5px solid ${d ? 'rgba(255,255,255,0.15)' : 'rgba(26,26,46,0.15)'}`,
+                            display: 'flex', alignItems: 'flex-start', justifyContent: 'center', paddingTop: 5,
+                        }}
+                    >
+                        <div style={{ width: 3, height: 6, borderRadius: 100, background: accent }} />
+                    </motion.div>
+                </motion.div>
 
-            <style>{`@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }`}</style>
+            </div>
         </section>
     )
 }
