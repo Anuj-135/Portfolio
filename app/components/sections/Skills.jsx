@@ -109,7 +109,7 @@ export default function Skills({ darkMode }) {
                 {/* ── Tab switcher ── */}
                 <div style={reveal(120)} className="mb-8">
                     <div
-                        className="inline-flex items-center gap-2 p-1.5 rounded-2xl"
+                        className="inline-flex items-center gap-2 p-1.5 rounded-2xl flex-wrap"
                         style={{ background: pageBg, boxShadow: insetShadow }}
                     >
                         {categories.map(({ id, label, emoji, color }) => {

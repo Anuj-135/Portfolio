@@ -3,6 +3,8 @@
 import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 
+
+
 const roles = [
     'Frontend Engineer',
     'Full Stack Developer',
@@ -237,7 +239,7 @@ export default function Hero({ darkMode }) {
                             </motion.button>
 
                             <motion.a
-                                href="/resume.pdf" target="_blank" rel="noopener noreferrer"
+                                href="/Resume.pdf" target="_blank" rel="noopener noreferrer"
                                 whileHover={{ y: -2 }}
                                 whileTap={{ scale: 0.97 }}
                                 style={{
