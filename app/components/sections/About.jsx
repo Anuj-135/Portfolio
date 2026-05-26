@@ -168,7 +168,7 @@ export default function About({ darkMode }) {
                         <NmCard darkMode={d} className="relative overflow-hidden" style={{ minHeight: 260 }}>
                             <div style={{ position: 'relative', width: '100%', height: '100%', minHeight: 260 }}>
                                 <Image
-                                    src="/Profile.jpg"
+                                    src="/profile.jpg"
                                     alt="Anuj Chahar"
                                     fill
                                     style={{ objectFit: 'cover', objectPosition: 'center top' }}

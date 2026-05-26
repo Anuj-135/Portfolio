@@ -1,7 +1,83 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { projects } from "../../data/projects"
+
+const projects = [
+    {
+        id: 1,
+        featured: true,
+        title: 'Portfolio Website',
+        desc: 'A modern, responsive personal portfolio built with Next.js and Tailwind CSS. Features neumorphic design, dark/light mode, smooth animations and scroll-triggered reveals.',
+        longDesc: 'Designed and built from scratch with a focus on performance, accessibility and visual quality. Includes custom animations, a contact form, and a clean component architecture.',
+        tags: ['Next.js', 'React', 'Tailwind CSS', 'JavaScript'],
+        color: '#6c63ff',
+        emoji: '🚀',
+        live: 'https://your-portfolio.vercel.app',
+        github: 'https://github.com/',
+        status: 'Live',
+    },
+    {
+        id: 2,
+        featured: false,
+        title: 'E-Commerce UI',
+        desc: 'A full-featured e-commerce frontend with product listing, cart, filters and responsive design.',
+        tags: ['React', 'Tailwind CSS', 'JavaScript'],
+        color: '#06b6d4',
+        emoji: '🛒',
+        live: '#',
+        github: 'https://github.com/',
+        status: 'In Progress',
+    },
+    {
+        id: 3,
+        featured: false,
+        title: 'REST API Server',
+        desc: 'A Node.js + Express REST API with JWT authentication, MongoDB integration and full CRUD operations.',
+        tags: ['Node.js', 'Express.js', 'MongoDB', 'REST APIs'],
+        color: '#10b981',
+        emoji: '⚙️',
+        live: '#',
+        github: 'https://github.com/',
+        status: 'Complete',
+    },
+    {
+        id: 4,
+        featured: false,
+        title: 'Weather Dashboard',
+        desc: 'A clean weather app consuming OpenWeatherMap API with 7-day forecast and location search.',
+        tags: ['React', 'JavaScript', 'REST APIs'],
+        color: '#f59e0b',
+        emoji: '🌤️',
+        live: '#',
+        github: 'https://github.com/',
+        status: 'Live',
+    },
+    {
+        id: 5,
+        featured: false,
+        title: 'Task Manager App',
+        desc: 'Full-stack task manager with drag-and-drop, categories, due dates and user authentication.',
+        tags: ['React', 'Node.js', 'MongoDB', 'Express.js'],
+        color: '#8b5cf6',
+        emoji: '✅',
+        live: '#',
+        github: 'https://github.com/',
+        status: 'In Progress',
+    },
+    {
+        id: 6,
+        featured: false,
+        title: 'Blog Platform',
+        desc: 'A markdown-powered blog with Next.js App Router, MDX support and a clean reading experience.',
+        tags: ['Next.js', 'React', 'JavaScript'],
+        color: '#ec4899',
+        emoji: '📝',
+        live: '#',
+        github: 'https://github.com/',
+        status: 'Complete',
+    },
+]
+
 const allTags = ['All', ...Array.from(new Set(projects.flatMap(p => p.tags)))]
 
 const statusColors = {
@@ -294,9 +370,59 @@ export default function Projects({ darkMode }) {
                 )}
 
                 {/* Filter pills */}
-                <div style={reveal(300)} className="mb-6">
+                <div style={reveal(300)} className="mb-7">
+
+                    {/* Mobile: horizontal scroll — hidden scrollbar */}
+                    <div className="sm:hidden" style={{ position: 'relative' }}>
+                        {/* Right fade hint */}
+                        <div style={{
+                            position: 'absolute', right: 0, top: 0, bottom: 0, width: 40, zIndex: 2,
+                            background: `linear-gradient(to left, ${pageBg}, transparent)`,
+                            pointerEvents: 'none', borderRadius: '0 16px 16px 0',
+                        }} />
+                        <div
+                            style={{
+                                display: 'flex', gap: 8,
+                                padding: '8px 10px',
+                                borderRadius: 18,
+                                background: pageBg, boxShadow: insetShadow,
+                                overflowX: 'auto', overflowY: 'hidden',
+                                scrollbarWidth: 'none',
+                                msOverflowStyle: 'none',
+                                WebkitOverflowScrolling: 'touch',
+                            }}
+                        >
+                            {allTags.map(tag => {
+                                const isActive = activeFilter === tag
+                                return (
+                                    <button
+                                        key={tag}
+                                        onClick={() => setActiveFilter(tag)}
+                                        style={{
+                                            flexShrink: 0,
+                                            padding: '6px 14px',
+                                            borderRadius: 100,
+                                            fontSize: 11.5, fontWeight: 600,
+                                            border: 'none', cursor: 'pointer',
+                                            whiteSpace: 'nowrap',
+                                            transition: 'all 0.18s ease',
+                                            color: isActive ? '#fff' : muted,
+                                            backgroundColor: isActive ? '#6c63ff' : 'transparent',
+                                            boxShadow: isActive
+                                                ? '0 3px 12px rgba(108,99,255,0.45)'
+                                                : raised,
+                                        }}
+                                    >
+                                        {tag}
+                                    </button>
+                                )
+                            })}
+                        </div>
+                    </div>
+
+                    {/* Tablet/Desktop: wrapped layout */}
                     <div
-                        className="flex flex-wrap gap-2 p-1.5 rounded-2xl w-fit"
+                        className="hidden sm:flex flex-wrap gap-2 p-2 rounded-2xl w-fit"
                         style={{ background: pageBg, boxShadow: insetShadow }}
                     >
                         {allTags.map(tag => {
