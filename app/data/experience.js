@@ -96,3 +96,9 @@ export const timeline = [
         tags: ['C++', 'HTML', 'CSS', 'Academics'],
     },
 ]
+
+export const typeBadge = {
+    work: { label: '💼 Work', color: '#6c63ff' },
+    education: { label: '🎓 Education', color: '#06b6d4' },
+    achievement: { label: '🏆 Achievement', color: '#f59e0b' },
+}

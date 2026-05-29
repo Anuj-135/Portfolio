@@ -1,90 +1,13 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-
-const projects = [
-    {
-        id: 1,
-        featured: true,
-        title: 'Portfolio Website',
-        desc: 'A modern, responsive personal portfolio built with Next.js and Tailwind CSS. Features neumorphic design, dark/light mode, smooth animations and scroll-triggered reveals.',
-        longDesc: 'Designed and built from scratch with a focus on performance, accessibility and visual quality. Includes custom animations, a contact form, and a clean component architecture.',
-        tags: ['Next.js', 'React', 'Tailwind CSS', 'JavaScript'],
-        color: '#6c63ff',
-        emoji: '🚀',
-        live: 'https://your-portfolio.vercel.app',
-        github: 'https://github.com/',
-        status: 'Live',
-    },
-    {
-        id: 2,
-        featured: false,
-        title: 'E-Commerce UI',
-        desc: 'A full-featured e-commerce frontend with product listing, cart, filters and responsive design.',
-        tags: ['React', 'Tailwind CSS', 'JavaScript'],
-        color: '#06b6d4',
-        emoji: '🛒',
-        live: '#',
-        github: 'https://github.com/',
-        status: 'In Progress',
-    },
-    {
-        id: 3,
-        featured: false,
-        title: 'REST API Server',
-        desc: 'A Node.js + Express REST API with JWT authentication, MongoDB integration and full CRUD operations.',
-        tags: ['Node.js', 'Express.js', 'MongoDB', 'REST APIs'],
-        color: '#10b981',
-        emoji: '⚙️',
-        live: '#',
-        github: 'https://github.com/',
-        status: 'Complete',
-    },
-    {
-        id: 4,
-        featured: false,
-        title: 'Weather Dashboard',
-        desc: 'A clean weather app consuming OpenWeatherMap API with 7-day forecast and location search.',
-        tags: ['React', 'JavaScript', 'REST APIs'],
-        color: '#f59e0b',
-        emoji: '🌤️',
-        live: '#',
-        github: 'https://github.com/',
-        status: 'Live',
-    },
-    {
-        id: 5,
-        featured: false,
-        title: 'Task Manager App',
-        desc: 'Full-stack task manager with drag-and-drop, categories, due dates and user authentication.',
-        tags: ['React', 'Node.js', 'MongoDB', 'Express.js'],
-        color: '#8b5cf6',
-        emoji: '✅',
-        live: '#',
-        github: 'https://github.com/',
-        status: 'In Progress',
-    },
-    {
-        id: 6,
-        featured: false,
-        title: 'Blog Platform',
-        desc: 'A markdown-powered blog with Next.js App Router, MDX support and a clean reading experience.',
-        tags: ['Next.js', 'React', 'JavaScript'],
-        color: '#ec4899',
-        emoji: '📝',
-        live: '#',
-        github: 'https://github.com/',
-        status: 'Complete',
-    },
-]
+import { projects, statusColors } from '../../data/projects'
+import { useNmTheme } from '../ui/useNmTheme'
+import NmCard from '../ui/NmCard'
+import SectionWrapper from '../ui/SectionWrapper'
+import SectionHeader from '../ui/SectionHeader'
 
 const allTags = ['All', ...Array.from(new Set(projects.flatMap(p => p.tags)))]
-
-const statusColors = {
-    'Live': { bg: 'rgba(16,185,129,0.12)', color: '#10b981', dot: '#10b981' },
-    'In Progress': { bg: 'rgba(245,158,11,0.12)', color: '#f59e0b', dot: '#f59e0b' },
-    'Complete': { bg: 'rgba(108,99,255,0.12)', color: '#6c63ff', dot: '#6c63ff' },
-}
 
 function useInView(threshold = 0.08) {
     const ref = useRef(null)
@@ -304,17 +227,8 @@ export default function Projects({ darkMode }) {
         transform: inView ? 'translateY(0)' : 'translateY(24px)',
     })
 
-    const pageBg = d ? '#0d0d1a' : '#e8e8f0'
-    const raised = d
-        ? '6px 6px 16px #07071099, -6px -6px 16px #131324'
-        : '6px 6px 16px #c8c8d0, -6px -6px 16px #ffffff'
-    const insetShadow = d
-        ? 'inset 3px 3px 8px #07071099, inset -3px -3px 8px #13132480'
-        : 'inset 3px 3px 8px #c0c0c8, inset -3px -3px 8px #ffffff'
-
-    const text = d ? '#f0ede8' : '#1a1a2e'
-    const muted = d ? 'rgba(240,237,232,0.45)' : 'rgba(26,26,46,0.50)'
-    const lbl = d ? 'rgba(240,237,232,0.28)' : 'rgba(26,26,46,0.32)'
+    // AFTER — single import
+    const { pageBg, raised, inset, raisedSm, text, muted, lbl, divider, accent, divClr, insetShadow } = useNmTheme(darkMode)
 
     const featured = projects.find(p => p.featured)
     const filteredGrid = projects
@@ -322,108 +236,57 @@ export default function Projects({ darkMode }) {
         .filter(p => activeFilter === 'All' || p.tags.includes(activeFilter))
 
     return (
-        <section
-            id="projects"
-            ref={sectionRef}
-            style={{ background: pageBg, transition: 'background 0.4s ease' }}
-            className="relative py-20 sm:py-28 px-4 sm:px-6 lg:px-8"
-        >
-            {/* Ambient glow */}
-            <div style={{
-                position: 'absolute', top: '30%', right: '10%',
-                width: 400, height: 400, borderRadius: '50%',
-                background: d ? 'rgba(108,99,255,0.06)' : 'rgba(108,99,255,0.04)',
-                filter: 'blur(100px)', pointerEvents: 'none',
-            }} />
+        <SectionWrapper id="projects" darkMode={darkMode} sectionRef={sectionRef}>
+            {/* Header */}
+            <SectionHeader
+                number="03 — Projects"
+                title="Things I've Built"
+                subtitle="A mix of personal projects, learning experiments and real-world builds.
+                    All source code is available on GitHub."
+                inView={inView}
+                lbl={lbl}
+                muted={muted}
+            />
 
-            <div className="relative z-10 max-w-6xl mx-auto">
-
-                {/* Header */}
-                <div style={reveal(0)} className="mb-10 sm:mb-12">
-                    <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.22em', textTransform: 'uppercase', color: lbl }}>
-                        03 — Projects
-                    </span>
-                    <h2 style={{ fontSize: 'clamp(1.8rem,4vw,3rem)', fontWeight: 900, letterSpacing: '-0.03em', color: text, marginTop: 8 }}>
-                        Things I've Built<span style={{ color: '#6c63ff' }}>.</span>
-                    </h2>
-                    <p style={{ fontSize: 14, color: muted, marginTop: 10, maxWidth: 480, lineHeight: 1.7 }}>
-                        A mix of personal projects, learning experiments and real-world builds.
-                        All source code is available on GitHub.
-                    </p>
+            {/* Featured card */}
+            {featured && (
+                <div className="mb-8">
+                    <FeaturedCard
+                        project={featured}
+                        darkMode={d}
+                        raised={raised}
+                        insetShadow={insetShadow}
+                        pageBg={pageBg}
+                        text={text}
+                        muted={muted}
+                        lbl={lbl}
+                        inView={inView}
+                    />
                 </div>
+            )}
 
-                {/* Featured card */}
-                {featured && (
-                    <div className="mb-8">
-                        <FeaturedCard
-                            project={featured}
-                            darkMode={d}
-                            raised={raised}
-                            insetShadow={insetShadow}
-                            pageBg={pageBg}
-                            text={text}
-                            muted={muted}
-                            lbl={lbl}
-                            inView={inView}
-                        />
-                    </div>
-                )}
+            {/* Filter pills */}
+            <div style={reveal(300)} className="mb-7">
 
-                {/* Filter pills */}
-                <div style={reveal(300)} className="mb-7">
-
-                    {/* Mobile: horizontal scroll — hidden scrollbar */}
-                    <div className="sm:hidden" style={{ position: 'relative' }}>
-                        {/* Right fade hint */}
-                        <div style={{
-                            position: 'absolute', right: 0, top: 0, bottom: 0, width: 40, zIndex: 2,
-                            background: `linear-gradient(to left, ${pageBg}, transparent)`,
-                            pointerEvents: 'none', borderRadius: '0 16px 16px 0',
-                        }} />
-                        <div
-                            style={{
-                                display: 'flex', gap: 8,
-                                padding: '8px 10px',
-                                borderRadius: 18,
-                                background: pageBg, boxShadow: insetShadow,
-                                overflowX: 'auto', overflowY: 'hidden',
-                                scrollbarWidth: 'none',
-                                msOverflowStyle: 'none',
-                                WebkitOverflowScrolling: 'touch',
-                            }}
-                        >
-                            {allTags.map(tag => {
-                                const isActive = activeFilter === tag
-                                return (
-                                    <button
-                                        key={tag}
-                                        onClick={() => setActiveFilter(tag)}
-                                        style={{
-                                            flexShrink: 0,
-                                            padding: '6px 14px',
-                                            borderRadius: 100,
-                                            fontSize: 11.5, fontWeight: 600,
-                                            border: 'none', cursor: 'pointer',
-                                            whiteSpace: 'nowrap',
-                                            transition: 'all 0.18s ease',
-                                            color: isActive ? '#fff' : muted,
-                                            backgroundColor: isActive ? '#6c63ff' : 'transparent',
-                                            boxShadow: isActive
-                                                ? '0 3px 12px rgba(108,99,255,0.45)'
-                                                : raised,
-                                        }}
-                                    >
-                                        {tag}
-                                    </button>
-                                )
-                            })}
-                        </div>
-                    </div>
-
-                    {/* Tablet/Desktop: wrapped layout */}
+                {/* Mobile: horizontal scroll — hidden scrollbar */}
+                <div className="sm:hidden" style={{ position: 'relative' }}>
+                    {/* Right fade hint */}
+                    <div style={{
+                        position: 'absolute', right: 0, top: 0, bottom: 0, width: 40, zIndex: 2,
+                        background: `linear-gradient(to left, ${pageBg}, transparent)`,
+                        pointerEvents: 'none', borderRadius: '0 16px 16px 0',
+                    }} />
                     <div
-                        className="hidden sm:flex flex-wrap gap-2 p-2 rounded-2xl w-fit"
-                        style={{ background: pageBg, boxShadow: insetShadow }}
+                        style={{
+                            display: 'flex', gap: 8,
+                            padding: '8px 10px',
+                            borderRadius: 18,
+                            background: pageBg, boxShadow: insetShadow,
+                            overflowX: 'auto', overflowY: 'hidden',
+                            scrollbarWidth: 'none',
+                            msOverflowStyle: 'none',
+                            WebkitOverflowScrolling: 'touch',
+                        }}
                     >
                         {allTags.map(tag => {
                             const isActive = activeFilter === tag
@@ -431,13 +294,18 @@ export default function Projects({ darkMode }) {
                                 <button
                                     key={tag}
                                     onClick={() => setActiveFilter(tag)}
-                                    className="px-4 py-1.5 rounded-xl text-xs font-semibold transition-all duration-200 active:scale-95"
                                     style={{
+                                        flexShrink: 0,
+                                        padding: '6px 14px',
+                                        borderRadius: 100,
+                                        fontSize: 11.5, fontWeight: 600,
                                         border: 'none', cursor: 'pointer',
+                                        whiteSpace: 'nowrap',
+                                        transition: 'all 0.18s ease',
                                         color: isActive ? '#fff' : muted,
                                         backgroundColor: isActive ? '#6c63ff' : 'transparent',
                                         boxShadow: isActive
-                                            ? '0 4px 14px rgba(108,99,255,0.45)'
+                                            ? '0 3px 12px rgba(108,99,255,0.45)'
                                             : raised,
                                     }}
                                 >
@@ -448,32 +316,58 @@ export default function Projects({ darkMode }) {
                     </div>
                 </div>
 
-                {/* Project grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {filteredGrid.length > 0
-                        ? filteredGrid.map((p, i) => (
-                            <ProjectCard
-                                key={p.id}
-                                project={p}
-                                darkMode={d}
-                                raised={raised}
-                                pageBg={pageBg}
-                                text={text}
-                                muted={muted}
-                                inView={inView}
-                                delay={400 + i * 80}
-                            />
-                        ))
-                        : (
-                            <div className="col-span-full py-16 flex flex-col items-center gap-3" style={{ color: muted }}>
-                                <span className="text-4xl">🔍</span>
-                                <p className="text-sm font-medium">No projects with <strong>{activeFilter}</strong> tag yet.</p>
-                            </div>
+                {/* Tablet/Desktop: wrapped layout */}
+                <div
+                    className="hidden sm:flex flex-wrap gap-2 p-2 rounded-2xl w-fit"
+                    style={{ background: pageBg, boxShadow: insetShadow }}
+                >
+                    {allTags.map(tag => {
+                        const isActive = activeFilter === tag
+                        return (
+                            <button
+                                key={tag}
+                                onClick={() => setActiveFilter(tag)}
+                                className="px-4 py-1.5 rounded-xl text-xs font-semibold transition-all duration-200 active:scale-95"
+                                style={{
+                                    border: 'none', cursor: 'pointer',
+                                    color: isActive ? '#fff' : muted,
+                                    backgroundColor: isActive ? '#6c63ff' : 'transparent',
+                                    boxShadow: isActive
+                                        ? '0 4px 14px rgba(108,99,255,0.45)'
+                                        : raised,
+                                }}
+                            >
+                                {tag}
+                            </button>
                         )
-                    }
+                    })}
                 </div>
-
             </div>
-        </section>
+
+            {/* Project grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {filteredGrid.length > 0
+                    ? filteredGrid.map((p, i) => (
+                        <ProjectCard
+                            key={p.id}
+                            project={p}
+                            darkMode={d}
+                            raised={raised}
+                            pageBg={pageBg}
+                            text={text}
+                            muted={muted}
+                            inView={inView}
+                            delay={400 + i * 80}
+                        />
+                    ))
+                    : (
+                        <div className="col-span-full py-16 flex flex-col items-center gap-3" style={{ color: muted }}>
+                            <span className="text-4xl">🔍</span>
+                            <p className="text-sm font-medium">No projects with <strong>{activeFilter}</strong> tag yet.</p>
+                        </div>
+                    )
+                }
+            </div>
+        </SectionWrapper>
     )
 }

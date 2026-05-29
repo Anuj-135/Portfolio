@@ -1,3 +1,4 @@
+// Shared across Hero, Contact, Footer — update your real links here
 export const socials = [
     {
         label: 'GitHub',

@@ -17,7 +17,7 @@ export const projects = [
         featured: false,
         title: 'E-Commerce UI',
         desc: 'A full-featured e-commerce frontend with product listing, cart, filters and responsive design.',
-        tags: ['HTML/CSS', 'Tailwind CSS', 'JavaScript'],
+        tags: ['React', 'Tailwind CSS', 'JavaScript'],
         color: '#06b6d4',
         emoji: '🛒',
         live: '#',
@@ -73,3 +73,9 @@ export const projects = [
         status: 'Complete',
     },
 ]
+
+export const statusColors = {
+    'Live': { bg: 'rgba(16,185,129,0.12)', color: '#10b981', dot: '#10b981' },
+    'In Progress': { bg: 'rgba(245,158,11,0.12)', color: '#f59e0b', dot: '#f59e0b' },
+    'Complete': { bg: 'rgba(108,99,255,0.12)', color: '#6c63ff', dot: '#6c63ff' },
+}

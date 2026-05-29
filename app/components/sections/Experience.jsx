@@ -2,111 +2,11 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { motion, useInView } from 'framer-motion'
+import { timeline, typeBadge } from '../../data/experience'
+import { useNmTheme } from '../ui/useNmTheme'
+import SectionWrapper from '../ui/SectionWrapper'
+import SectionHeader from '../ui/SectionHeader'
 
-const timeline = [
-    {
-        type: 'work',
-        title: 'Frontend Developer Intern',
-        org: 'Tech Startup',
-        period: 'Jun 2024 — Present',
-        location: 'Remote',
-        color: '#6c63ff',
-        emoji: '💼',
-        points: [
-            'Built and maintained reusable React components used across 3 products',
-            'Improved page load performance by 35% through code splitting and lazy loading',
-            'Collaborated with designers to implement pixel-perfect UI from Figma mockups',
-            'Integrated REST APIs and handled complex state management with Context API',
-        ],
-        tags: ['React', 'Tailwind CSS', 'REST APIs', 'Figma'],
-    },
-    {
-        type: 'achievement',
-        title: 'Hackathon Winner — HackIndia 2024',
-        org: 'HackIndia',
-        period: 'Oct 2024',
-        location: 'Delhi, India',
-        color: '#f59e0b',
-        emoji: '🏆',
-        points: [
-            'Won 1st place out of 200+ teams in a 36-hour national hackathon',
-            'Built a real-time collaborative coding platform using React and WebSockets',
-            'Presented the product to a panel of judges from top tech companies',
-            'Received a cash prize of ₹50,000 and mentorship opportunity',
-        ],
-        tags: ['React', 'WebSockets', 'Node.js', 'Hackathon'],
-    },
-    {
-        type: 'education',
-        title: 'B.Tech in Computer Science',
-        org: 'University / College Name',
-        period: '2022 — 2026',
-        location: 'India',
-        color: '#06b6d4',
-        emoji: '🎓',
-        points: [
-            'Pursuing a full degree in Computer Science with focus on web technologies',
-            'Relevant coursework: Data Structures, Algorithms, DBMS, Operating Systems',
-            'Active member of the college coding club and tech fest organiser',
-            'Maintaining a strong academic record while working on personal projects',
-        ],
-        tags: ['DSA', 'DBMS', 'OS', 'Networking'],
-    },
-    {
-        type: 'achievement',
-        title: 'LeetCode — 500+ Problems Solved',
-        org: 'LeetCode / Competitive Programming',
-        period: '2023 — Present',
-        location: 'Online',
-        color: '#f97316',
-        emoji: '⚡',
-        points: [
-            'Solved 500+ problems on LeetCode across Easy, Medium and Hard categories',
-            'Achieved a LeetCode rating of 1800+ (Top 10% globally)',
-            'Consistent participant in LeetCode Weekly and Biweekly contests',
-            'Strong command over Arrays, Trees, Graphs, DP and Sliding Window patterns',
-        ],
-        tags: ['DSA', 'C++', 'LeetCode', 'Problem Solving'],
-    },
-    {
-        type: 'work',
-        title: 'Freelance Web Developer',
-        org: 'Self-employed',
-        period: 'Jan 2024 — May 2024',
-        location: 'Remote',
-        color: '#10b981',
-        emoji: '🚀',
-        points: [
-            'Designed and developed 3 client websites from scratch using Next.js',
-            'Built responsive landing pages with modern animations using Framer Motion',
-            'Handled client communication, requirements gathering and delivery',
-            'Deployed projects on Vercel with custom domain configuration',
-        ],
-        tags: ['Next.js', 'JavaScript', 'Vercel', 'Framer Motion'],
-    },
-    {
-        type: 'education',
-        title: 'Higher Secondary (12th Grade)',
-        org: 'School Name',
-        period: '2020 — 2022',
-        location: 'India',
-        color: '#a78bfa',
-        emoji: '📚',
-        points: [
-            'Completed 12th grade with Computer Science as a major subject',
-            'Scored 90%+ in boards with distinction in Computer Science',
-            'First exposure to programming through C++ and basic web development',
-            'Participated in inter-school science and tech exhibitions',
-        ],
-        tags: ['C++', 'HTML', 'CSS', 'Academics'],
-    },
-]
-
-const typeBadge = {
-    work: { label: '💼 Work', color: '#6c63ff' },
-    education: { label: '🎓 Education', color: '#06b6d4' },
-    achievement: { label: '🏆 Achievement', color: '#f59e0b' },
-}
 
 function TimelineItem({ item, index, darkMode, pageBg, raised, insetShadow, text, muted, isLast }) {
     const itemRef = useRef(null)
@@ -275,17 +175,7 @@ export default function Experience({ darkMode }) {
     const inView = useInView(sectionRef, { once: true, margin: '-80px' })
     const d = darkMode
 
-    const pageBg = d ? '#0d0d1a' : '#e8e8f0'
-    const raised = d
-        ? '6px 6px 16px #07071099, -6px -6px 16px #131324'
-        : '6px 6px 16px #c8c8d0, -6px -6px 16px #ffffff'
-    const insetShadow = d
-        ? 'inset 3px 3px 8px #07071099, inset -3px -3px 8px #13132480'
-        : 'inset 3px 3px 8px #c0c0c8, inset -3px -3px 8px #ffffff'
-
-    const text = d ? '#f0ede8' : '#1a1a2e'
-    const muted = d ? 'rgba(240,237,232,0.45)' : 'rgba(26,26,46,0.50)'
-    const lbl = d ? 'rgba(240,237,232,0.28)' : 'rgba(26,26,46,0.32)'
+    const { pageBg, raised, inset, raisedSm, text, muted, lbl, divider, accent, insetShadow } = useNmTheme(darkMode)
 
     const counts = {
         work: timeline.filter(t => t.type === 'work').length,
@@ -294,93 +184,76 @@ export default function Experience({ darkMode }) {
     }
 
     return (
-        <section
-            id="experience"
-            ref={sectionRef}
-            style={{ background: pageBg, transition: 'background 0.4s ease' }}
-            className="relative py-20 sm:py-28 px-4 sm:px-6 lg:px-8"
-        >
-            <div style={{
-                position: 'absolute', top: '40%', left: '15%',
-                width: 400, height: 400, borderRadius: '50%',
-                background: d ? 'rgba(6,182,212,0.05)' : 'rgba(6,182,212,0.04)',
-                filter: 'blur(100px)', pointerEvents: 'none',
-            }} />
+        <SectionWrapper id="experience" darkMode={darkMode} sectionRef={sectionRef}>
 
-            <div className="relative z-10 max-w-3xl mx-auto">
-
-                {/* Header */}
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={inView ? { opacity: 1, y: 0 } : {}}
-                    transition={{ duration: 0.6 }}
-                    className="mb-10 sm:mb-14"
-                >
-                    <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.22em', textTransform: 'uppercase', color: lbl }}>
-                        04 — Experience
-                    </span>
-                    <h2 style={{ fontSize: 'clamp(1.8rem,4vw,3rem)', fontWeight: 900, letterSpacing: '-0.03em', color: text, marginTop: 8 }}>
-                        My Journey<span style={{ color: '#6c63ff' }}>.</span>
-                    </h2>
-                    <p style={{ fontSize: 14, color: muted, marginTop: 10, lineHeight: 1.7 }}>
-                        A timeline of my work, education and achievements.
-                    </p>
-
-                    {/* Summary chips */}
-                    <div className="flex flex-wrap items-center gap-2.5 mt-5">
-                        {[
-                            { label: `${counts.work} Work`, color: '#6c63ff', emoji: '💼' },
-                            { label: `${counts.education} Education`, color: '#06b6d4', emoji: '🎓' },
-                            { label: `${counts.achievement} Achievements`, color: '#f59e0b', emoji: '🏆' },
-                        ].map(({ label, color, emoji }) => (
-                            <div
-                                key={label}
-                                className="flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold"
-                                style={{ background: pageBg, boxShadow: raised, color: muted }}
-                            >
-                                <span>{emoji}</span>
-                                <span style={{ color }}>{label}</span>
-                            </div>
-                        ))}
-                    </div>
-                </motion.div>
-
-                {/* Timeline */}
-                <div>
-                    {timeline.map((item, i) => (
-                        <TimelineItem
-                            key={i}
-                            item={item}
-                            index={i}
-                            darkMode={d}
-                            pageBg={pageBg}
-                            raised={raised}
-                            insetShadow={insetShadow}
-                            text={text}
-                            muted={muted}
-                            isLast={i === timeline.length - 1}
-                        />
+            {/* Header */}
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={inView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.6 }}
+                className="mb-10 sm:mb-14"
+            >
+                <SectionHeader
+                    number="04 — Experience"
+                    title="My Journey"
+                    subtitle="A timeline of my work, education and achievements."
+                    inView={inView}
+                    lbl={lbl}
+                    muted={muted}
+                />
+                {/* Summary chips */}
+                <div className="flex flex-wrap items-center gap-2.5 mt-5">
+                    {[
+                        { label: `${counts.work} Work`, color: '#6c63ff', emoji: '💼' },
+                        { label: `${counts.education} Education`, color: '#06b6d4', emoji: '🎓' },
+                        { label: `${counts.achievement} Achievements`, color: '#f59e0b', emoji: '🏆' },
+                    ].map(({ label, color, emoji }) => (
+                        <div
+                            key={label}
+                            className="flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold"
+                            style={{ background: pageBg, boxShadow: raised, color: muted }}
+                        >
+                            <span>{emoji}</span>
+                            <span style={{ color }}>{label}</span>
+                        </div>
                     ))}
                 </div>
+            </motion.div>
 
-                {/* Bottom cap */}
-                <motion.div
-                    initial={{ opacity: 0, y: 16 }}
-                    animate={inView ? { opacity: 1, y: 0 } : {}}
-                    transition={{ duration: 0.6, delay: 0.4 }}
-                    className="flex flex-col items-center gap-2 mt-2"
-                >
-                    <div className="w-10 h-10 rounded-full flex items-center justify-center text-lg"
-                        style={{ background: pageBg, boxShadow: raised }}
-                    >
-                        🌱
-                    </div>
-                    <p style={{ fontSize: 12, color: muted, textAlign: 'center' }}>
-                        The journey continues — always learning, always building.
-                    </p>
-                </motion.div>
-
+            {/* Timeline */}
+            <div>
+                {timeline.map((item, i) => (
+                    <TimelineItem
+                        key={i}
+                        item={item}
+                        index={i}
+                        darkMode={d}
+                        pageBg={pageBg}
+                        raised={raised}
+                        insetShadow={insetShadow}
+                        text={text}
+                        muted={muted}
+                        isLast={i === timeline.length - 1}
+                    />
+                ))}
             </div>
-        </section>
+
+            {/* Bottom cap */}
+            <motion.div
+                initial={{ opacity: 0, y: 16 }}
+                animate={inView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.6, delay: 0.4 }}
+                className="flex flex-col items-center gap-2 mt-2"
+            >
+                <div className="w-10 h-10 rounded-full flex items-center justify-center text-lg"
+                    style={{ background: pageBg, boxShadow: raised }}
+                >
+                    🌱
+                </div>
+                <p style={{ fontSize: 12, color: muted, textAlign: 'center' }}>
+                    The journey continues — always learning, always building.
+                </p>
+            </motion.div>
+        </SectionWrapper>
     )
 }
