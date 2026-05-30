@@ -1,6 +1,6 @@
 export const stats = [
     { number: '1+', label: 'Years Experience', icon: '⏱️' },
-    { number: '10+', label: 'Projects Built', icon: '🚀' },
+    { number: '5+', label: 'Projects Built', icon: '🚀' },
     { number: '5+', label: 'Tech Stacks', icon: '⚡' },
     { number: '100%', label: 'Passion', icon: '🔥' },
 ]
@@ -21,7 +21,7 @@ export const stack = [
 ]
 
 export const currently = [
-    { emoji: '💻', line: 'Building this portfolio' },
+    { emoji: '💻', line: 'Building real world projects' },
     { emoji: '📚', line: 'Learning Node.js + Express' },
     { emoji: '🔍', line: 'Exploring databases' },
     { emoji: '🤝', line: 'Open to collaborating' },

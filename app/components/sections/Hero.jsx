@@ -153,7 +153,7 @@ export default function Hero({ darkMode }) {
                                 Contact Me
                             </NmButton>
 
-                            <NmButton variant="inset" darkMode={darkMode} href="/resume.pdf">
+                            <NmButton variant="inset" darkMode={darkMode} href="/Resume.pdf">
                                 <svg width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                                     <path d="M12 15V3m0 12l-4-4m4 4l4-4M2 17l.621 2.485A2 2 0 004.561 21h14.878a2 2 0 001.94-1.515L22 17" />
                                 </svg>

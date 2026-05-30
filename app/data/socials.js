@@ -2,7 +2,7 @@
 export const socials = [
     {
         label: 'GitHub',
-        href: 'https://github.com/',
+        href: 'https://github.com/Anuj-135',
         color: '#6c63ff',
         icon: (
             <svg width="17" height="17" fill="currentColor" viewBox="0 0 24 24">
@@ -12,7 +12,7 @@ export const socials = [
     },
     {
         label: 'LinkedIn',
-        href: 'https://linkedin.com/',
+        href: 'https://www.linkedin.com/in/anuj-chahar-444636345',
         color: '#0a66c2',
         icon: (
             <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
@@ -22,7 +22,7 @@ export const socials = [
     },
     {
         label: 'Twitter',
-        href: 'https://twitter.com/',
+        href: 'https://x.com/AnujChahar51049',
         color: '#1da1f2',
         icon: (
             <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">

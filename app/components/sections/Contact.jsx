@@ -298,7 +298,7 @@ export default function Contact({ darkMode }) {
             </div>
             <div style={{ height: 1, background: divClr, marginBottom: 14 }} />
             {[
-              { emoji: '📧', label: 'Email', value: 'anuj@example.com', href: 'mailto:anuj@example.com' },
+              { emoji: '📧', label: 'Email', value: 'anujchahar135@gmail.com', href: 'mailto:anujchahar135@gmail.com' },
               { emoji: '📍', label: 'Location', value: 'India', href: null },
               { emoji: '⚡', label: 'Response', value: 'Within 24 hours', href: null },
             ].map(({ emoji, label, value, href }) => (
